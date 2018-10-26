@@ -7,9 +7,7 @@ tk = Tk()
 
 # change these to whatever values you want
 WIDTH = 400
-HEIGHT = 200
-
-
+HEIGHT = 500
 canvas = Canvas(tk, width=WIDTH, height=HEIGHT)
 
 def main():
@@ -17,25 +15,30 @@ def main():
     if len(sys.argv) >= 2:
         if sys.argv[1] == "merge":
             displayCanvas("Merge sort visualisation")
+            start = time.time()
             performMergeSort(arr)
-            drawSorted(arr)
+            end = time.time()
+            drawSorted(arr,start,end)
         elif sys.argv[1] == "bubble":
             displayCanvas("Bubble sort visualisation")
             print("WARNING: This may take a while...")
             print("Shows why bubble sort is rarely used")
+            start = time.time()
             bubbleSort(arr)
-            drawSorted(arr)
+            end = time.time()
+            drawSorted(arr,start,end)
         elif sys.argv[1] == "bogo":
             displayCanvas("Bogo sort visualisation")
             print("This is definitely gonna take a while...")
+            start = time.time()
             bogoSort(arr)
-            drawSorted(arr)
+            end = time.time()
+            drawSorted(arr,start,end)
         else:
             print("Not a valid option please try again")
     else:
         print("Not enough command line arguments")
 
-    print("finished")
 
 '''----------------Bogo sort animation----------------'''
 
@@ -137,11 +140,12 @@ def displayCanvas(string):
     canvas.configure(background="black")
 
 # draw the sorted array
-def drawSorted(arr):
+def drawSorted(arr,start,end):
     canvas.delete("all")
     for i in range(WIDTH):
         canvas.create_line(i, HEIGHT, i, HEIGHT-arr[i], fill="blue")
     tk.update()
+    print("Finished in {} seconds".format(end-start))
     canvas.mainloop()   
 
 # create and randomise array
