@@ -145,7 +145,7 @@ def drawSorted(arr,start,end):
     for i in range(WIDTH):
         canvas.create_line(i, HEIGHT, i, HEIGHT-arr[i], fill="blue")
     tk.update()
-    print("Finished in {} seconds".format(end-start))
+    print("Finished in {} seconds".format(round(end-start, 3)))
     canvas.mainloop()   
 
 # create and randomise array
