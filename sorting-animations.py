@@ -12,36 +12,79 @@ canvas = Canvas(tk, width=WIDTH, height=HEIGHT)
 
 def main():
     arr = generateArray()
+    start = 0
+    end = 0
     if len(sys.argv) >= 2:
         if sys.argv[1] == "merge":
             displayCanvas("Merge sort visualisation")
             start = time.time()
             performMergeSort(arr)
             end = time.time()
-            drawSorted(arr,start,end)
         elif sys.argv[1] == "bubble":
             displayCanvas("Bubble sort visualisation")
             print("WARNING: This may take a while...")
-            print("Shows why bubble sort is rarely used")
             start = time.time()
             bubbleSort(arr)
             end = time.time()
-            drawSorted(arr,start,end)
         elif sys.argv[1] == "bogo":
             displayCanvas("Bogo sort visualisation")
             print("This is definitely gonna take a while...")
             start = time.time()
             bogoSort(arr)
             end = time.time()
-            drawSorted(arr,start,end)
+        elif: sys.argv[1] == "heap":
+            displayCanvas("Heap sort visualisation")
+            start = time.time()
+            heapSort(arr)
+            end = time.time()
         else:
             print("Not a valid option please try again")
+        if end:
+            drawSorted(arr,start,end)
     else:
         print("Not enough command line arguments")
 
+'''----------------Heap sort animation----------------'''
+def heapify(arr, n, i): 
+    largest = i # Initialize largest as root 
+    l = 2 * i + 1     # left = 2*i + 1 
+    r = 2 * i + 2     # right = 2*i + 2 
+  
+    # See if left child of root exists and is 
+    # greater than root 
+    if l < n and arr[i] < arr[l]: 
+        largest = l 
+  
+    # See if right child of root exists and is 
+    # greater than root 
+    if r < n and arr[largest] < arr[r]: 
+        largest = r 
+  
+    # Change root, if needed 
+    if largest != i: 
+        arr[i],arr[largest] = arr[largest],arr[i] # swap 
+  
+        # Heapify the root. 
+        heapify(arr, n, largest)
+    
+    draw(arr)
+  
+# The main function to sort an array of given size 
+def heapSort(arr): 
+    n = len(arr) 
+  
+    # Build a maxheap. 
+    for i in range(n, -1, -1): 
+        heapify(arr, n, i) 
+  
+    # One by one extract elements 
+    for i in range(n-1, 0, -1): 
+        arr[i], arr[0] = arr[0], arr[i] # swap 
+        heapify(arr, i, 0) 
+'''---------------------------------------------------'''
 
 '''----------------Bogo sort animation----------------'''
-
+# cause why not
 def bogoSort(arr):
     sorted = arr.sort()
     while arr != sorted:
