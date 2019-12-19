@@ -1,4 +1,5 @@
 from decimal import *
+import sys
 import random
 import time
 import math
@@ -13,6 +14,9 @@ black = (0,0,0)
 color = (120,255,120)
 white = (255,255,255)
 
+pygame.init()
+clock = pygame.time.Clock()
+
 # draw unsorted rray
 def draw(arr):
     screen.fill(black)
@@ -25,14 +29,20 @@ def draw(arr):
         pygame.draw.lines(screen, color, False, pointlist, 1)
 
     pygame.display.update()
+    clock.tick(200)
 
 # draw the sorted array
-def drawSorted(arr,start,end):
+def drawSorted(arr):
+    screen.fill(black)
+
     for i in range(width):
-        canvas.create_line(i, height, i, height-arr[i], fill="blue")
-    tk.update()
-    print("Finished in {} seconds".format(round(end-start, 3)))
-    canvas.mainloop()   
+        x1 = x2 = i
+        y1 = height
+        y2 = height - arr[i]
+        pointlist = [(x1,y1), (x2, y2)]
+        pygame.draw.lines(screen, white, False, pointlist, 1)
+
+    pygame.display.update()
 
 # create and randomise array
 def generateArray():
@@ -43,42 +53,42 @@ def generateArray():
     return arr
 
 '''----------------Heap sort animation----------------'''
-def heapify(arr, n, i): 
-    largest = i # Initialize largest as root 
-    l = 2 * i + 1     # left = 2*i + 1 
-    r = 2 * i + 2     # right = 2*i + 2 
-  
-    # See if left child of root exists and is 
-    # greater than root 
-    if l < n and arr[i] < arr[l]: 
-        largest = l 
-  
-    # See if right child of root exists and is 
-    # greater than root 
-    if r < n and arr[largest] < arr[r]: 
-        largest = r 
-  
-    # Change root, if needed 
-    if largest != i: 
-        arr[i],arr[largest] = arr[largest],arr[i] # swap 
-  
-        # Heapify the root. 
+def heapify(arr, n, i):
+    largest = i # Initialize largest as root
+    l = 2 * i + 1     # left = 2*i + 1
+    r = 2 * i + 2     # right = 2*i + 2
+
+    # See if left child of root exists and is
+    # greater than root
+    if l < n and arr[i] < arr[l]:
+        largest = l
+
+    # See if right child of root exists and is
+    # greater than root
+    if r < n and arr[largest] < arr[r]:
+        largest = r
+
+    # Change root, if needed
+    if largest != i:
+        arr[i],arr[largest] = arr[largest],arr[i] # swap
+
+        # Heapify the root.
         heapify(arr, n, largest)
-    
+
     draw(arr)
-  
-# The main function to sort an array of given size 
-def heapSort(arr): 
-    n = len(arr) 
-  
-    # Build a maxheap. 
-    for i in range(n, -1, -1): 
-        heapify(arr, n, i) 
-  
-    # One by one extract elements 
-    for i in range(n-1, 0, -1): 
-        arr[i], arr[0] = arr[0], arr[i] # swap 
-        heapify(arr, i, 0) 
+
+# The main function to sort an array of given size
+def heapSort(arr):
+    n = len(arr)
+
+    # Build a maxheap.
+    for i in range(n, -1, -1):
+        heapify(arr, n, i)
+
+    # One by one extract elements
+    for i in range(n-1, 0, -1):
+        arr[i], arr[0] = arr[0], arr[i] # swap
+        heapify(arr, i, 0)
 '''---------------------------------------------------'''
 
 '''----------------Bogo sort animation----------------'''
@@ -166,13 +176,32 @@ def bubbleSort(arr):
 '''----------------------------------------------------'''
 
 if __name__ == "__main__":
-    pygame.init()
+
     size = (width,height)
     screen = pygame.display.set_mode(size)
-    clock = pygame.time.Clock()
-    pygame.display.set_caption("Sorting Animations")
-    
+
     arr = generateArray()
-
-    bubbleSort(arr)
-
+    finished = False
+    while True:
+        if len(sys.argv) >= 2 and not finished:
+            if sys.argv[1] == "merge":
+                pygame.display.set_caption("Merge Sort")
+                performMergeSort(arr)
+            elif sys.argv[1] == "bubble":
+                pygame.display.set_caption("Bubble Sort")
+                print("WARNING: This may take a while...")
+                bubbleSort(arr)
+            elif sys.argv[1] == "bogo":
+                pygame.display.set_caption("Bogo sort")
+                print("This is definitely gonna take a while...")
+                bogoSort(arr)
+            elif sys.argv[1] == "heap":
+                pygame.display.set_caption("Heap sort")
+                heapSort(arr)
+            else:
+                print("Not a valid option please try again")
+        elif finished:
+            drawSorted(arr)
+        else:
+            print("Not enough command line arguments")
+        finished = True
