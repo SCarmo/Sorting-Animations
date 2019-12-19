@@ -1,48 +1,46 @@
-from Tkinter import *
 from decimal import *
 import random
 import time
 import math
-tk = Tk()
+import pygame
 
 # change these to whatever values you want
-WIDTH = 400
-HEIGHT = 500
-canvas = Canvas(tk, width=WIDTH, height=HEIGHT)
+width = 400
+height = 500
 
-def main():
-    arr = generateArray()
-    start = 0
-    end = 0
-    if len(sys.argv) >= 2:
-        if sys.argv[1] == "merge":
-            displayCanvas("Merge sort visualisation")
-            start = time.time()
-            performMergeSort(arr)
-            end = time.time()
-        elif sys.argv[1] == "bubble":
-            displayCanvas("Bubble sort visualisation")
-            print("WARNING: This may take a while...")
-            start = time.time()
-            bubbleSort(arr)
-            end = time.time()
-        elif sys.argv[1] == "bogo":
-            displayCanvas("Bogo sort visualisation")
-            print("This is definitely gonna take a while...")
-            start = time.time()
-            bogoSort(arr)
-            end = time.time()
-        elif: sys.argv[1] == "heap":
-            displayCanvas("Heap sort visualisation")
-            start = time.time()
-            heapSort(arr)
-            end = time.time()
-        else:
-            print("Not a valid option please try again")
-        if end:
-            drawSorted(arr,start,end)
-    else:
-        print("Not enough command line arguments")
+# Defining some colors
+black = (0,0,0)
+color = (120,255,120)
+white = (255,255,255)
+
+# draw unsorted rray
+def draw(arr):
+    screen.fill(black)
+
+    for i in range(width):
+        x1 = x2 = i
+        y1 = height
+        y2 = height - arr[i]
+        pointlist = [(x1,y1), (x2, y2)]
+        pygame.draw.lines(screen, color, False, pointlist, 1)
+
+    pygame.display.update()
+
+# draw the sorted array
+def drawSorted(arr,start,end):
+    for i in range(width):
+        canvas.create_line(i, height, i, height-arr[i], fill="blue")
+    tk.update()
+    print("Finished in {} seconds".format(round(end-start, 3)))
+    canvas.mainloop()   
+
+# create and randomise array
+def generateArray():
+    arr = []
+    for i in range(width):
+        arr.append(random.randint(0,height))
+    random.shuffle(arr)
+    return arr
 
 '''----------------Heap sort animation----------------'''
 def heapify(arr, n, i): 
@@ -97,8 +95,8 @@ def bogoSort(arr):
 '''----------------Merge sort animation----------------'''
 
 def performMergeSort(arr):
-    temp = [0]*WIDTH
-    mergesort(arr, temp, 0, WIDTH-1)
+    temp = [0]*width
+    mergesort(arr, temp, 0, width-1)
 
 def mergesort(arr,temparr,left,right):
     if left < right:
@@ -167,36 +165,14 @@ def bubbleSort(arr):
             i = i + 1
 '''----------------------------------------------------'''
 
+if __name__ == "__main__":
+    pygame.init()
+    size = (width,height)
+    screen = pygame.display.set_mode(size)
+    clock = pygame.time.Clock()
+    pygame.display.set_caption("Sorting Animations")
+    
+    arr = generateArray()
 
-# draw unsorted array
-def draw(arr):
-    canvas.delete("all")
-    for i in range(WIDTH):
-        canvas.create_line(i, HEIGHT, i, HEIGHT-arr[i], fill="orange")
-    tk.update()
+    bubbleSort(arr)
 
-# draw the canvas
-def displayCanvas(string):
-    tk.title(string)
-    canvas.pack()
-    canvas.config()
-    canvas.configure(background="black")
-
-# draw the sorted array
-def drawSorted(arr,start,end):
-    canvas.delete("all")
-    for i in range(WIDTH):
-        canvas.create_line(i, HEIGHT, i, HEIGHT-arr[i], fill="blue")
-    tk.update()
-    print("Finished in {} seconds".format(round(end-start, 3)))
-    canvas.mainloop()   
-
-# create and randomise array
-def generateArray():
-    arr = []
-    for i in range(WIDTH):
-        arr.append(random.randint(0,HEIGHT))
-    random.shuffle(arr)
-    return arr
-
-main()
